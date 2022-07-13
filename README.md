@@ -9,7 +9,10 @@ This is a simple html parser for the website pararius.com where the user gets no
 2. Install redis server
 
 ## Limitations
-I've hardcoded the redis credentials, change in code(`redis.go`) if required
+I've hardcoded the below:
+- redis credentials, change in code(`redis.go`) if required
+- Apartment searching URLs
+- Parsing only supported for pararius website search page
 
 # Run
 ```
