@@ -12,7 +12,10 @@ This is a simple html parser for the website pararius.com where the user gets no
 I've hardcoded the redis credentials, change in code(`redis.go`) if required
 
 # Run
-`go run .`
+```
+go mod download
+go run .
+````
 
 # What this does
 1. Parse existing page
