@@ -69,11 +69,14 @@ func getNewApartments(url string) []string {
 		log.Println("error parsing webpage ", url)
 	}
 
-	doc.Find(".listing-search-item__title a").
+	doc.Find(".search-list__item--listing").
 		Each(func(i int, s *goquery.Selection) {
-			// fmt.Println("Index: ", i)
-			// fmt.Println("Name: ", s.Text())
-			apartments = append(apartments, s.Text())
+			// Ignore featured items
+			if s.Find(".listing-label--featured").Size() == 0 {
+				s.Find("a.listing-search-item__link--title").Each(func(i int, s *goquery.Selection) {
+					apartments = append(apartments, s.Text())
+				})
+			}
 		})
 
 	return apartments
