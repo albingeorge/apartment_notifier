@@ -37,7 +37,7 @@ func compareApartments(ctx context.Context, url string) {
 	newApartments := getNewApartments(url)
 
 	// Check if currently stored apartment is at the top of listing
-	if newApartments[0] != latestApartment {
+	if len(newApartments) > 0 && newApartments[0] != latestApartment {
 		// Print diff if not
 		fmt.Println("New apartments found!")
 		printLatestApartments(latestApartment, newApartments)
