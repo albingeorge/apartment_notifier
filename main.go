@@ -23,7 +23,7 @@ func notifyNewApartments(url string) {
 
 	compareApartments(ctx, url)
 
-	for range time.Tick(time.Minute * 5) {
+	for range time.Tick(time.Minute * 2) {
 		compareApartments(ctx, url)
 	}
 }
