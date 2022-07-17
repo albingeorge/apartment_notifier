@@ -3,11 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
-	"net/http"
 	"time"
 
-	"github.com/PuerkitoBio/goquery"
+	"github.com/albingeorge/pararius_notifier/parsers"
 	"github.com/martinlindhe/notify"
 )
 
@@ -36,7 +34,17 @@ func compareApartments(ctx context.Context, url string, area string) {
 	fmt.Println("\nLATEST apartment: ", latestApartment)
 
 	// Get current apartment listing
-	newApartments := getNewApartments(url)
+	parser, err := parsers.GetParser(url)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	newApartments, err := parser.GetApartments()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// Check if currently stored apartment is at the top of listing
 	if len(newApartments) > 0 && newApartments[0] != latestApartment {
@@ -49,42 +57,6 @@ func compareApartments(ctx context.Context, url string, area string) {
 	} else {
 		fmt.Println("No new apartments found!")
 	}
-}
-
-func getNewApartments(url string) []string {
-	var apartments []string
-	resp, err := http.Get(url)
-
-	if err != nil {
-		log.Println("HTTP fetch failed: ", url)
-		// IF http fetch failed, we should return immediately, else the defer statement will fail
-		// Alternative is to return err as well and handle gracefully in the calling function
-		return []string{}
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		log.Println("Invalid resp code: ", resp.StatusCode, "; url: ", url)
-	}
-
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
-
-	if err != nil {
-		log.Println("error parsing webpage ", url)
-	}
-
-	doc.Find(".search-list__item--listing").
-		Each(func(i int, s *goquery.Selection) {
-			// Ignore featured items
-			if s.Find(".listing-label--featured").Size() == 0 {
-				s.Find("a.listing-search-item__link--title").Each(func(i int, s *goquery.Selection) {
-					apartments = append(apartments, s.Text())
-				})
-			}
-		})
-
-	return apartments
 }
 
 func printLatestApartments(oldLatestApartment string, newApartments []string, area string) {
