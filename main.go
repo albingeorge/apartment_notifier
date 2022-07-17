@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	go notifyNewApartments("https://www.pararius.com/apartments/amsterdam/0-1500", "Amsterdam")
+	go notifyNewApartments("https://www.pararius.com/apartments/amsterdam/0-1600", "Amsterdam")
 
 	go notifyNewApartments("https://www.pararius.com/apartments/utrecht/0-1500", "Utrecht")
 
