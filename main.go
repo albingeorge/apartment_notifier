@@ -15,6 +15,10 @@ func main() {
 	go notifyNewApartments("https://www.pararius.com/apartments/utrecht/0-1500", "Utrecht")
 
 	go notifyNewApartments("https://www.pararius.com/apartments/amersfoort/0-1500", "Amersfoot")
+
+	go notifyNewApartments("https://www.pararius.com/apartments/haarlem/0-1500/50m2", "Haarlem")
+
+	// go notifyNewApartments("https://www.funda.nl/en/huur/amsterdam,utrecht,diemen,amersfoort/1000-1750/1-dag/sorteer-datum-af/", "Amsterdam Funda")
 	select {}
 }
 
