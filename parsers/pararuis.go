@@ -1,9 +1,6 @@
 package parsers
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -13,25 +10,11 @@ type pararius struct {
 
 func (p *pararius) GetApartments() ([]string, error) {
 	var apartments []string
-	resp, err := http.Get((*p).url)
+
+	doc, err := getDocumentFromUrl((*p).url)
 
 	if err != nil {
-		log.Println("HTTP fetch failed: ", (*p).url)
-		// IF http fetch failed, we should return immediately, else the defer statement will fail
-		// Alternative is to return err as well and handle gracefully in the calling function
 		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		log.Println("Invalid resp code: ", resp.StatusCode, "; url: ", (*p).url)
-	}
-
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
-
-	if err != nil {
-		log.Println("error parsing webpage ", (*p).url)
 	}
 
 	doc.Find(".search-list__item--listing").

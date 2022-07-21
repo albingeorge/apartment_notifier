@@ -2,7 +2,12 @@ package parsers
 
 import (
 	"errors"
+	"log"
+	"net/http"
+	"strconv"
 	"strings"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 type Parser interface {
@@ -17,4 +22,27 @@ func GetParser(url string) (Parser, error) {
 	}
 
 	return nil, errors.New("no parser found for the url: " + url)
+}
+
+func getDocumentFromUrl(url string) (*goquery.Document, error) {
+	resp, err := http.Get(url)
+
+	if err != nil {
+		log.Println("HTTP fetch failed: ", url)
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New("Invalid resp code: " + strconv.Itoa(resp.StatusCode))
+	}
+
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
+
+	if err != nil {
+		return nil, errors.New("error parsing webpage " + url)
+	}
+
+	return doc, nil
 }
